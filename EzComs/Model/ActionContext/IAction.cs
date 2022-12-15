@@ -47,7 +47,7 @@ namespace EzComs.Model.ActionContext
                 try
                 {
                     State = ActionState.IN_EXECUTION;
-                    State = Execute().Result;
+                    State = await Execute();
                 }
                 catch (Exception ex)
                 {
@@ -55,7 +55,7 @@ namespace EzComs.Model.ActionContext
                     State = ActionState.FAILED;
                 }
                 //try executing next actions regarless
-                ExecuteNextActions();
+                await ExecuteNextActions();
             }
             return State;
 
@@ -67,7 +67,7 @@ namespace EzComs.Model.ActionContext
         /// <summary>
         /// Execute all next actions asynchronously
         /// </summary>
-        private void ExecuteNextActions() {
+        private async void ExecuteNextActions() {
 
             List<Task<ActionState>> actionsInExecution = new();
             nextActions.ForEach(action => { actionsInExecution.Add(action.Execute()); });
