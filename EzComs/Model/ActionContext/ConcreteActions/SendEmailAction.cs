@@ -14,26 +14,22 @@ namespace EzComs.Model.ActionContext.ConcreteActions
     public class SendEmailAction : IAction
     {
         public Guid Id { get; set; }
-        public Dictionary<string, object> ActionOptions { get; set; } = new Dictionary<string, object>(){
-            {
-                "emailDetails", new EmailDetails(
+        public object ActionOptions { get; set; } =  new EmailDetails(
                 fromAddress:    "maxstoltenborgh@hotmail.com",
                 toAddress:      "maxstoltenborgh@hotmail.com",
-                smtpUsername:   "userName" ,
-                smtpPassword:   "p@55word" ,
+                smtpUsername:   "hverhoed@gmail.com",
+                smtpPassword:   "p@55_word15" ,
                 body:           "This is the body message",
                 subject:        "This is a test email subject",
                 smtpClientUrl:  "smtp.gmail.com"
-                )
-            }
-            };
-        public List<IAction> dependsOn { get; set; }
-        public List<IAction> nextActions { get; set; }
+                );
+        public List<IAction> dependsOn { get; set; } = new();
+        public List<IAction> nextActions { get; set; } = new();
         public ActionState State { get; set; }
 
         private bool ValidateOptions()
         {
-            return ActionOptions.ContainsKey("emailDetails") && ActionOptions["emailDetails"] is EmailDetails ;
+            return ActionOptions is EmailDetails;
         }
 
         //very simple example of an action taking place
@@ -42,7 +38,9 @@ namespace EzComs.Model.ActionContext.ConcreteActions
             try
             {
                 if (!ValidateOptions()) throw new Exception("Required Options were invalid");
-                var emailDetails = ActionOptions["emailDetails"] as EmailDetails;
+                var emailDetails = ActionOptions as EmailDetails;
+                if (emailDetails == null) throw new Exception("Something went wrong converting to EmailDetails");
+
                 var smtpClient = new SmtpClient(emailDetails.smtpClientUrl)
                 {
                     Port = 587,
@@ -55,7 +53,6 @@ namespace EzComs.Model.ActionContext.ConcreteActions
             }
             catch (Exception)
             {
-                
                 State=ActionState.FAILED;
                 throw;
             }
@@ -74,13 +71,13 @@ namespace EzComs.Model.ActionContext.ConcreteActions
 
         public EmailDetails(string fromAddress, string toAddress, string subject, string body, string smtpPassword, string smtpUsername, string smtpClientUrl)
         {
-            this.fromAddress = fromAddress;
-            this.toAddress = toAddress;
-            this.subject = subject;
-            this.body = body;
-            this.smtpPassword = smtpPassword;
-            this.smtpUsername = smtpUsername;
-            this.smtpClientUrl = smtpClientUrl;
+            this.fromAddress    = fromAddress;
+            this.toAddress      = toAddress;
+            this.subject        = subject;
+            this.body           = body;
+            this.smtpPassword   = smtpPassword;
+            this.smtpUsername   = smtpUsername;
+            this.smtpClientUrl  = smtpClientUrl;
         }
     }
 }

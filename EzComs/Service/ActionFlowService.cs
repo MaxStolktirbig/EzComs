@@ -2,14 +2,14 @@
 
 namespace EzComs.Service
 {
-    public class ActionService : IService<IAction>
+    public class ActionFlowService : IService<ActionFlow>
     {
-        public static IAction create(IAction entity)
+        public static ActionFlow create(ActionFlow entity)
         {
             throw new NotImplementedException();
         }
 
-        public static bool delete(IAction entity)
+        public static bool delete(ActionFlow entity)
         {
             throw new NotImplementedException();
         }
@@ -19,16 +19,12 @@ namespace EzComs.Service
             throw new NotImplementedException();
         }
 
-        public static IAction get(string id)
+        public static ActionFlow get(string id)
         {
             throw new NotImplementedException();
         }
 
-        public static List<IAction> getAllByFlow(string FlowId)
-        {
-            throw new NotImplementedException();
-        }
-        public static IAction save(IAction entity)
+        public static ActionFlow save(ActionFlow entity)
         {
             throw new NotImplementedException();
         }

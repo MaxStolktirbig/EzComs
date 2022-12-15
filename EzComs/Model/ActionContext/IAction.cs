@@ -13,7 +13,7 @@ namespace EzComs.Model.ActionContext
         ActionState State { get; set; }
 
         //Contains all the variables necessary to complete the action
-        Dictionary<string, object> ActionOptions { get; set; }
+        object ActionOptions { get; set; }
 
         //the action depends on the  these actions 
         public List<IAction> dependsOn { get; set; }
@@ -26,7 +26,7 @@ namespace EzComs.Model.ActionContext
         /// Kicks of an action. It is sealed which makes it so that the actions are always done in a standardized manner
         /// </summary>
         /// <returns>
-        /// An ActionState that represents the state of the current action
+        /// Returns an ActionState that represents the state of the current action
         /// </returns>
         public sealed async Task<ActionState> Start() {
 
@@ -65,7 +65,7 @@ namespace EzComs.Model.ActionContext
         protected Task<ActionState> Execute();
 
         /// <summary>
-        /// Execute all next actions with multithreading
+        /// Execute all next actions asynchronously
         /// </summary>
         private void ExecuteNextActions() {
 
