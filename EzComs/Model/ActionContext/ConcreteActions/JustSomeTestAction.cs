@@ -9,6 +9,7 @@ namespace EzComs.Model.ActionContext.ConcreteActions
         public List<IAction> nextActions { get; set; } = new();
         public List<IAction> dependsOn { get; set; } = new();
         public ActionState State { get; set; }
+        public bool NextActionsCompleted { get; set; }
 
         public async Task<ActionState> Execute()
         {

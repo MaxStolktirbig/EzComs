@@ -21,17 +21,13 @@ namespace EzComs.Model.ActionContext
         /// </summary>
         public void Execute()
         {
-            List<IAction> startedActions = new();
-            InitialActions.ForEach(action => { action.Start(); startedActions.Add(action); });
-
-            //keep checking if all actions have been completed and remove all actions from execution that are no longer pending or executing 
-            while (startedActions.Count() > 0) { foreach (IAction action in startedActions.Where(action => action.State is not ActionState.PENDING or ActionState.IN_EXECUTION){
-                    startedActions.Remove(action);
-                }; 
+            List<Task<ActionState>> actionsInExecution = new();
+            InitialActions.ForEach(action => { actionsInExecution.Add(action.Start()); });
+            actionsInExecution.ForEach(task => task.Start());
+            Task.WaitAll(actionsInExecution.ToArray());
             
-            }
             //if there are any actions that have not been completed (are not done) then set the isCompleted to false
-            isCompleted = InitialActions.Where(step => step.State != ActionState.DONE).Count() > 0;
+            isCompleted = actionsInExecution.Where(action => action.Result != ActionState.DONE).Count() > 0 ? false : true;
         }
     }
 }

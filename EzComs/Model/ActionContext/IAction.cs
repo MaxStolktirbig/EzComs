@@ -11,6 +11,7 @@ namespace EzComs.Model.ActionContext
     {
         Guid Id { get; set; }
         ActionState State { get; set; }
+        bool NextActionsCompleted { get; set; }
 
         //Contains all the variables necessary to complete the action
         object ActionOptions { get; set; }
@@ -30,15 +31,17 @@ namespace EzComs.Model.ActionContext
         /// </returns>
         public sealed async Task<ActionState> Start() {
 
+            NextActionsCompleted = false;
             //fail the action if one of the actions that are required failed or cannot start
             if (dependsOn.Where(action => action.State == ActionState.FAILED || action.State == ActionState.COULD_NOT_START).Count() > 0)
             {
                 State = ActionState.COULD_NOT_START;
+                Console.WriteLine($"Action(id={Id}) could not be started because it's dependencies were not resolved");
             }
             //keep retrying to start when one of the actions that it depends on is either pending or still in execution
             if (dependsOn.Where(action => action.State == ActionState.IN_EXECUTION || action.State == ActionState.PENDING).Count() > 0)
             {
-                State = Start().Result;
+                State = await Start();
             }
             //only start the action if we're still pending, otherwise return the current state
             if (State == ActionState.PENDING)
@@ -55,28 +58,38 @@ namespace EzComs.Model.ActionContext
                     State = ActionState.FAILED;
                 }
                 //try executing next actions regarless
-                await ExecuteNextActions();
+                NextActionsCompleted = ExecuteNextActions();
             }
             return State;
 
         } 
 
-        //execute should implement the execution type of action
+        /// <summary>
+        /// Executes an implementation which differs for every action type
+        /// </summary>
+        /// <returns>
+        /// An ActionState which represents whether or not the task has been succeeded
+        /// </returns>
         protected Task<ActionState> Execute();
 
         /// <summary>
         /// Execute all next actions asynchronously
         /// </summary>
-        private async void ExecuteNextActions() {
-
+        /// <returns>
+        /// Boolean that represents whether or not all followup tasks could be done
+        /// </returns>
+        private bool ExecuteNextActions() {
+            bool returnState = true;
             List<Task<ActionState>> actionsInExecution = new();
             nextActions.ForEach(action => { actionsInExecution.Add(action.Execute()); });
-            actionsInExecution.ForEach(async actionInExecution =>
+            actionsInExecution.ForEach(task => task.Start());
+            Task.WaitAll(actionsInExecution.ToArray());
+            actionsInExecution.ForEach(actionInExecution =>
             {
-                Console.WriteLine($"Awaiting action execution of action {actionInExecution.Id} on thread {Thread.CurrentThread.ManagedThreadId}");
-                _ = await actionInExecution;
-                Console.WriteLine($"Finished action execution of action {actionInExecution.Id}");
+               ActionState currentActionState = actionInExecution.Result;
+               returnState = returnState == true ? currentActionState == ActionState.DONE : returnState;
             });
+            return returnState;
         }
     }
 
