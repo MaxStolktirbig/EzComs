@@ -19,31 +19,55 @@ namespace EzComs.Controllers
         }
 
         [HttpPost(Name = "CreateActionFlow")]
-        public async Task<ActionFlow> PostAsync(ActionFlow actionFlow)
+        public async Task<ActionFlow?> PostAsync(ActionFlow actionFlow)
         {
-            _logger.Log(LogLevel.Information, $"Creation of actionFlow type {actionFlow.GetType().Name} was requested");
-            return ActionFlowService.create(actionFlow);
+            _logger.Log(LogLevel.Information, $"Creation of ActionFlow type {actionFlow.GetType().Name} was requested");
+            try
+            {
+                return ActionFlowService.create(actionFlow);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
+            return null;
         }
 
         [HttpPut(Name = "UpdateActionFlow")]
-        public async Task<ActionFlow> PutAsync(ActionFlow actionFlow)
+        public async Task<ActionFlow?> PutAsync(ActionFlow actionFlow)
         {
-            _logger.Log(LogLevel.Information, $"Update of actionFlow type {actionFlow.GetType().Name} was requested");
-            return ActionFlowService.create(actionFlow);
+            _logger.Log(LogLevel.Information, $"Update of ActionFlow type {actionFlow.GetType().Name} was requested");
+            
+            try
+            {
+                return ActionFlowService.save(actionFlow);
+            } catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
+            return null;  
         }
 
 
         [HttpGet(Name = "GetActionFlow")]
-        public async Task<ActionFlow> GetAsync(string actionFlowId)
+        public async Task<ActionFlow?> GetAsync(string actionFlowId)
         {
-            _logger.Log(LogLevel.Information, $"Action with id {actionFlowId} was requested");
-            return ActionFlowService.get(actionFlowId);
+            _logger.Log(LogLevel.Information, $"ActionFlow with id {actionFlowId} was requested");
+            try
+            {
+                return ActionFlowService.get(actionFlowId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
+            return null;
         }
 
         [HttpDelete(Name = "DeleteActionFlow")]
         public async Task<HttpStatusCode> DeleteAsync(ActionFlow actionFlow)
         {
-            _logger.Log(LogLevel.Information, $"Action with id {actionFlow.Id} was requested");
+            _logger.Log(LogLevel.Information, $"ActionFlow with id {actionFlow.id} was requested");
             ActionFlowService.delete(actionFlow);
             return HttpStatusCode.NoContent;
         }
