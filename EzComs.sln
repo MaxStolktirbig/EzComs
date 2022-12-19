@@ -5,7 +5,10 @@ VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EzComs", "EzComs\EzComs.csproj", "{9B2D363C-4013-40C6-9895-F927A4F67D93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzComsTests", "AzComsTests\AzComsTests.csproj", "{8C3214C2-F2A0-4BC5-A1CC-1122037142A9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EzComsTests", "EzComsTests\EzComsTests.csproj", "{C93FEB5D-AD41-4537-9A9D-764A50FD51D9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9B2D363C-4013-40C6-9895-F927A4F67D93} = {9B2D363C-4013-40C6-9895-F927A4F67D93}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +20,10 @@ Global
 		{9B2D363C-4013-40C6-9895-F927A4F67D93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B2D363C-4013-40C6-9895-F927A4F67D93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B2D363C-4013-40C6-9895-F927A4F67D93}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8C3214C2-F2A0-4BC5-A1CC-1122037142A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8C3214C2-F2A0-4BC5-A1CC-1122037142A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8C3214C2-F2A0-4BC5-A1CC-1122037142A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8C3214C2-F2A0-4BC5-A1CC-1122037142A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C93FEB5D-AD41-4537-9A9D-764A50FD51D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C93FEB5D-AD41-4537-9A9D-764A50FD51D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C93FEB5D-AD41-4537-9A9D-764A50FD51D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C93FEB5D-AD41-4537-9A9D-764A50FD51D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
